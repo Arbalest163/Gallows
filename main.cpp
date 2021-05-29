@@ -48,7 +48,31 @@ public:
 	int getSize() { return size; }
 	bool getDefeat(); 
 	bool setDefeat();
+	Game& operator=(const Game& game);
 };
+Game& Game::operator=(const Game& game) {
+	wGallows = game.wGallows;
+	wLetter = game.wLetter;
+	hLetter = game.hLetter;
+	size = game.size;
+	countDefeat = game.countDefeat;
+	gridLogic = new int[size];
+	gridView = new int[size];
+	WIN = game.WIN;
+	DEFEAT = game.DEFEAT;
+	for (int i{ 0 }; i < size; ++i) {
+		gridLogic[i] = game.gridLogic[i];
+		gridView[i] = game.gridView[i];
+	}
+	alphabet = new int* [8];
+	for (int i{ 0 }; i < 8; ++i)
+		alphabet[i] = new int[8]{ 0 };
+	for (int i{ 0 }; i < 8; ++i)
+		for (int j{ 1 }; j < 8; ++j) {
+			alphabet[i][j] = game.alphabet[i][j];
+		}
+	return *this;
+}
 
 Game::Game() {
 	wGallows = 0;
@@ -73,18 +97,15 @@ Game::Game() {
 		}
 }
 Game::~Game() {
-	delete[]gridLogic;
-	delete[]gridView;
 	for (int i{ 0 }; i < 8; ++i)
-		delete alphabet[i];
+		delete[] alphabet[i];
 	delete[]alphabet;
+	delete[]gridView;
+	delete[]gridLogic;
 }
 Game& Game::resetGame() {
-	Game* tmp = new Game;
-	Game* tmp2;
-	tmp2 = this;
-	*this = *tmp;
-	delete tmp2;
+	Game tmp;
+	*this = tmp;
 	return *this;
 
 }
@@ -140,7 +161,6 @@ int main()
 	while (Gallows.isOpen())
 	{
 		Vector2i pos = Mouse::getPosition(Gallows);
-		
 		Event event;
 		//std::cout << x << "   " << y << std::endl; // отладка координат
 		while (Gallows.pollEvent(event))
@@ -151,24 +171,35 @@ int main()
 				if (event.key.code == Mouse::Left) {
 					int x{ 0 };
 					int y{ 0 };
-					if (pos.x > 900 && pos.x < 1440 && pos.y > 360 && pos.y < 900) {
-						x = (pos.x - 810) / game.getWidthLetter();
-						y = (pos.y - 270) / game.getHeightLetter();
-						if (pos.x > 1170 && pos.y > 810) continue;
-						bool flag{ false };
-						if (!game.getWIN() && !game.getDefeat())
+					if (!game.getWIN() && !game.getDefeat()) {
+						if (pos.x > 900 && pos.x < 1440 && pos.y > 360 && pos.y < 900) {
+							x = (pos.x - 810) / game.getWidthLetter();
+							y = (pos.y - 270) / game.getHeightLetter();
+							if (pos.x > 1170 && pos.y > 810) continue;
+							bool flag{ false };
 							for (int k{ 1 }; k < 6; k++) {
-								if (game.getAlphabet(y,x) == game.getGridLogic(k)) {
+								if (game.getAlphabet(y, x) == game.getGridLogic(k)) {
 									game.getGridView(k) = game.getGridLogic(k);
 									flag = true;
 								}
-
 							}
-						if (!flag)
-							if (!game.getWIN() && !game.getDefeat()) {
-								game.setWidthGallows(800);
-								game.setDefeat();
-							}
+							if (!flag)
+								if (!game.getWIN() && !game.getDefeat()) {
+									game.setWidthGallows(800);
+									game.setDefeat();
+								}
+						}
+					}
+					else {
+						if (pos.x > 1030 && pos.x < 1330 && pos.y > 570 && pos.y < 630) {
+							game.resetGame();
+							game.setGridLogic(word);
+						
+						}
+						if (pos.x > 1030 && pos.x < 1330 && pos.y > 645 && pos.y < 705) {
+							Gallows.close();
+						}
+					
 					}
 				}
 		}
