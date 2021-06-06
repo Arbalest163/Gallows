@@ -108,7 +108,7 @@ int main()
 		if (game.getDefeat()) {
 			loseSprite.setPosition(900, 150);
 			Gallows.draw(loseSprite);
-			menuSprite.setPosition(970, 540);
+			menuSprite.setPosition(970, 539);
 			Gallows.draw(menuSprite);
 		
 		}
