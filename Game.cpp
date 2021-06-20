@@ -2,7 +2,7 @@
 
 WordStr::WordStr() {
 	file.open("Word.txt", std::fstream::out | std::fstream::in);
-	for (int i{ 0 }; i < rand()%5 + 1; ++i)
+	for (int i{ 0 }; i < rand()%15 + 1; ++i)
 		file >> word;
 	sizeIntWord = word.length() + 1;
 	intWord = new int[sizeIntWord] {0};
@@ -71,8 +71,7 @@ Game::~Game() {
 Game& Game::resetGame() {
 	Game tmp;
 	*this = tmp;
-	WordStr word;
-	setGridLogic(word);
+	setGridLogic(WordStr{});
 	return *this;
 
 }
@@ -92,7 +91,16 @@ bool Game::setWIN() {
 	return WIN;
 }
 bool Game::getDefeat() { return DEFEAT; }
-bool Game::setDefeat() { --countDefeat; if (!countDefeat)DEFEAT = true;  return DEFEAT; }
+bool Game::setDefeat() { 
+	--countDefeat; 
+	if (!countDefeat) {
+		DEFEAT = true;
+		for (int i{ 0 }; i < sizeWord; ++i) {
+			gridView[i] = gridLogic[i];
+		}
+	}
+	return DEFEAT; 
+}
 int Game::getWidthGallows() { return wGallows; }
 int& Game::setWidthGallows(int num) { return wGallows += num; }
 int& Game::setGridLogic(const WordStr & word) {

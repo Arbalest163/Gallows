@@ -8,8 +8,7 @@ int main()
 	srand(time(0));
 	setlocale(0, "");
 	Game game;
-	WordStr word;
-	game.setGridLogic(word);
+	game.setGridLogic(WordStr{});
 	RenderWindow Gallows(VideoMode(1530, 1000), "The Gallows!", Style::Close);
 	Texture gallowsTexture;
 	gallowsTexture.loadFromFile("GallowsTexture.png");
@@ -92,12 +91,13 @@ int main()
 					Gallows.draw(lSprite);
 				}
 			}
-			for (int i{ game.getSize() > 6 ? 900 : 950 }, j{ 1 }; j < game.getSize(); i += game.getWidthLetter(), j++) {
-				lSprite.setTextureRect(IntRect(game.getGridView(j) * game.getWidthLetter(), 0, 
-												game.getWidthLetter(), game.getHeightLetter()));
-				lSprite.setPosition(i, 150);
-				Gallows.draw(lSprite);
-			}
+			
+		}
+		for (int i{ game.getSize() > 6 ? 900 : 950 }, j{ 1 }; j < game.getSize(); i += game.getWidthLetter(), j++) {
+			lSprite.setTextureRect(IntRect(game.getGridView(j) * game.getWidthLetter(), 0,
+				game.getWidthLetter(), game.getHeightLetter()));
+			lSprite.setPosition(i, 150);
+			Gallows.draw(lSprite);
 		}
 		if (game.getWIN()) {
 			winSprite.setPosition(900, 250);
