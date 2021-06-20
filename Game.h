@@ -1,16 +1,18 @@
 #pragma once
-class Slova {
-public:
-	int word_1[6];
+#include <time.h>
+#include<iostream>
+#include<fstream>
+#include<string>
 
-};
 class WordStr {
-	int* m_word;
-	int m_size;
+	std::string word;
+	std::fstream file;
+	int* intWord;
+	int sizeIntWord;
 public:
 	WordStr();
-	int getSize() { return m_size; }
-	int& operator[](int index) { return m_word[index]; }
+	int getSize() const { return sizeIntWord; }
+	int& operator[](int index) const { return intWord[index]; }
 };
 
 class Game {
@@ -23,7 +25,7 @@ private:
 	int** alphabet;
 	bool WIN;
 	bool DEFEAT;
-	int size = 6;
+	int sizeWord;
 	int countDefeat;
 public:
 	Game();
@@ -33,13 +35,14 @@ public:
 	int getGridLogic(int index);
 	int& getGridView(int index);
 	int getAlphabet(int index1, int index2);
+	void setAlphabet(int index1, int index2, int value);
 	bool getWIN();
 	bool setWIN();
 	int getWidthGallows();
 	int& setWidthGallows(int num);
 	Game& resetGame();
-	int& setGridLogic(WordStr& word);
-	int getSize() { return size; }
+	int& setGridLogic(const WordStr& word);
+	int getSize() { return sizeWord; }
 	bool getDefeat();
 	bool setDefeat();
 	Game& operator=(const Game& game);

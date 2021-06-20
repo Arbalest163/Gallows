@@ -1,38 +1,37 @@
 #include <SFML/Graphics.hpp>
-#include <time.h>
-#include<iostream>
-#include<fstream>
 #include"Game.h"
 using namespace sf;
 
 
 int main()
 {
+	srand(time(0));
 	setlocale(0, "");
 	Game game;
 	WordStr word;
 	game.setGridLogic(word);
-	RenderWindow Gallows(VideoMode(1530, 990), "The Gallows!");
+	RenderWindow Gallows(VideoMode(1530, 1000), "The Gallows!", Style::Close);
 	Texture gallowsTexture;
-	gallowsTexture.loadFromFile("C:\\SFML-2.5.1\\Gallows\\GallowsTexture.png");
+	gallowsTexture.loadFromFile("GallowsTexture.png");
 	Sprite gallowsSprite(gallowsTexture);
 	Texture frame;
-	frame.loadFromFile("C:\\SFML-2.5.1\\Gallows\\Ramka.png");
+	frame.loadFromFile("Ramka.png");
 	Sprite frameSprite(frame);
 	Texture letters;
-	letters.loadFromFile("C:\\SFML-2.5.1\\Gallows\\letterstr.png");
+	letters.loadFromFile("letterstr.png");
 	Sprite lSprite(letters);
 	Texture win;
-	win.loadFromFile("C:\\SFML-2.5.1\\Gallows\\win.png");
+	win.loadFromFile("win.png");
 	Sprite winSprite(win);
 	Texture lose;
-	lose.loadFromFile("C:\\SFML-2.5.1\\Gallows\\lose.png");
+	lose.loadFromFile("lose.png");
 	Sprite loseSprite(lose);
 	Texture menu;
-	menu.loadFromFile("C:\\SFML-2.5.1\\Gallows\\menu.png");
+	menu.loadFromFile("menu.png");
 	Sprite menuSprite(menu);
 	while (Gallows.isOpen())
 	{
+		
 		Vector2i pos = Mouse::getPosition(Gallows);
 		Event event;
 		//std::cout << x << "   " << y << std::endl; // отладка координат
@@ -42,34 +41,35 @@ int main()
 				Gallows.close();
 			if (event.type == Event::MouseButtonPressed)
 				if (event.key.code == Mouse::Left) {
-					int x{ 0 };
-					int y{ 0 };
+					int x{ (pos.x - 810) / game.getWidthLetter() };
+					int y{ (pos.y - 270) / game.getHeightLetter() };
 					if (!game.getWIN() && !game.getDefeat()) {
 						if (pos.x > 900 && pos.x < 1440 && pos.y > 360 && pos.y < 900) {
-							x = (pos.x - 810) / game.getWidthLetter();
-							y = (pos.y - 270) / game.getHeightLetter();
 							if (pos.x > 1170 && pos.y > 810) continue;
 							bool flag{ false };
 							for (int k{ 1 }; k < game.getSize(); k++) {
 								if (game.getAlphabet(y, x) == game.getGridLogic(k)) {
 									game.getGridView(k) = game.getGridLogic(k);
 									flag = true;
-								}
+								} 
 							}
-							if (!flag)
-								if (!game.getWIN() && !game.getDefeat()) {
+							if (!flag) {
+								if (!game.getWIN() && !game.getDefeat() && game.getAlphabet(y, x) < 34) {
+									game.setAlphabet(y, x, 34);
 									game.setWidthGallows(800);
 									game.setDefeat();
 								}
+							} else game.setAlphabet(y, x, 68);
+							
 						}
 					}
 					else {
-						if (pos.x > 1030 && pos.x < 1330 && pos.y > 570 && pos.y < 630) {
+						if (pos.x > 1030 && pos.x < 1330 && pos.y > 670 && pos.y < 730) {
 							game.resetGame();
-							game.setGridLogic(word);
+							
 						
 						}
-						if (pos.x > 1030 && pos.x < 1330 && pos.y > 645 && pos.y < 705) {
+						if (pos.x > 1030 && pos.x < 1330 && pos.y > 745 && pos.y < 805) {
 							Gallows.close();
 						}
 					
@@ -92,7 +92,7 @@ int main()
 					Gallows.draw(lSprite);
 				}
 			}
-			for (int i{ 950 }, j{ 1 }; j < game.getSize(); i += game.getWidthLetter(), j++) {
+			for (int i{ game.getSize() > 6 ? 900 : 950 }, j{ 1 }; j < game.getSize(); i += game.getWidthLetter(), j++) {
 				lSprite.setTextureRect(IntRect(game.getGridView(j) * game.getWidthLetter(), 0, 
 												game.getWidthLetter(), game.getHeightLetter()));
 				lSprite.setPosition(i, 150);
@@ -100,15 +100,15 @@ int main()
 			}
 		}
 		if (game.getWIN()) {
-			winSprite.setPosition(900, 150);
+			winSprite.setPosition(900, 250);
 			Gallows.draw(winSprite);
-			menuSprite.setPosition(970, 540);
+			menuSprite.setPosition(970, 640);
 			Gallows.draw(menuSprite);
 		}
 		if (game.getDefeat()) {
-			loseSprite.setPosition(900, 150);
+			loseSprite.setPosition(900, 250);
 			Gallows.draw(loseSprite);
-			menuSprite.setPosition(970, 540);
+			menuSprite.setPosition(970, 640);
 			Gallows.draw(menuSprite);
 		
 		}
