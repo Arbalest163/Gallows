@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include"Game.h"
+#include<sstream>
 using namespace sf;
 
 
@@ -7,9 +8,14 @@ int main()
 {
 	srand(time(0));
 	setlocale(0, "");
+	Font font;
+	font.loadFromFile("Font.ttf");
+	Text text("Scores: ", font, 50);
+	//text.setColor(Color::Red);
+	text.setPosition(1540, 100);
 	Game game;
 	game.setGridLogic(WordStr{});
-	RenderWindow Gallows(VideoMode(1530, 1000), "The Gallows!", Style::Close);
+	RenderWindow Gallows(VideoMode(1900, 1000), "The Gallows!", Style::Close);
 	Texture gallowsTexture;
 	gallowsTexture.loadFromFile("GallowsTexture.png");
 	Sprite gallowsSprite(gallowsTexture);
@@ -57,6 +63,7 @@ int main()
 									game.setAlphabet(y, x, 34);
 									game.setWidthGallows(800);
 									game.setDefeat();
+									game.setCountLetters()++;
 								}
 							} else game.setAlphabet(y, x, 68);
 							
@@ -75,7 +82,7 @@ int main()
 					}
 				}
 		}
-		Gallows.clear(Color::White);
+		//Gallows.clear(Color::White);
 		gallowsSprite.setTextureRect(IntRect(game.getWidthGallows(), 0, 800, 1000));
 		gallowsSprite.setPosition(0, 0);
 		Gallows.draw(gallowsSprite);
@@ -112,6 +119,7 @@ int main()
 			Gallows.draw(menuSprite);
 		
 		}
+		Gallows.draw(text);
 		Gallows.display();
 
 	}

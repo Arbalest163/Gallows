@@ -38,20 +38,10 @@ Game& Game::operator=(const Game& game) {
 	return *this;
 }
 
-Game::Game() {
-	wGallows = 0;
-	wLetter = 90;
-	hLetter = 90;
-	sizeWord = 0;
-	countDefeat = 11;
-	gridLogic = nullptr;
-	gridView = nullptr;
-	WIN = false;
-	DEFEAT = false;
-	/*for (int i{ 0 }; i < sizeWord; ++i) {
-		gridLogic[i] = 0;
-		gridView[i] = 0;
-	}*/
+Game::Game()
+	:wGallows{ 0 } ,wLetter {90}, hLetter{90}, sizeWord{0}, countDefeat{11},
+	 gridLogic{nullptr}, gridView{nullptr}, WIN{false}, DEFEAT{ false }, countLetters{ 0 } 
+{
 	alphabet = new int* [8];
 	for (int i{ 0 }; i < 8; ++i) {
 		alphabet[i] = new int[8]{ 0 };

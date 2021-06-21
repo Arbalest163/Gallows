@@ -27,11 +27,14 @@ private:
 	bool DEFEAT;
 	int sizeWord;
 	int countDefeat;
+	int countLetters;
 public:
 	Game();
 	~Game();
 	int getWidthLetter();
 	int getHeightLetter();
+	int getCountLetters() { return countLetters; }
+	int& setCountLetters() { return countLetters; }
 	int getGridLogic(int index);
 	int& getGridView(int index);
 	int getAlphabet(int index1, int index2);
