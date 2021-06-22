@@ -24,6 +24,7 @@ Game& Game::operator=(const Game& game) {
 	gridView = game.gridView;
 	WIN = game.WIN;
 	DEFEAT = game.DEFEAT;
+	countLetters = game.countLetters;
 	/*for (int i{ 0 }; i < sizeWord; ++i) {
 		gridLogic[i] = game.gridLogic[i];
 		gridView[i] = game.gridView[i];
@@ -40,7 +41,7 @@ Game& Game::operator=(const Game& game) {
 
 Game::Game()
 	:wGallows{ 0 } ,wLetter {90}, hLetter{90}, sizeWord{0}, countDefeat{11},
-	 gridLogic{nullptr}, gridView{nullptr}, WIN{false}, DEFEAT{ false }, countLetters{ 0 } 
+	 gridLogic{nullptr}, gridView{nullptr}, WIN{false}, DEFEAT{ false }, countLetters{ 11 } 
 {
 	alphabet = new int* [8];
 	for (int i{ 0 }; i < 8; ++i) {

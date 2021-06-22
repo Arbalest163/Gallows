@@ -7,15 +7,20 @@ using namespace sf;
 int main()
 {
 	srand(time(0));
-	setlocale(0, "");
+	//setlocale(0, "");
 	Font font;
 	font.loadFromFile("Font.ttf");
-	Text text("Scores: ", font, 50);
-	//text.setColor(Color::Red);
-	text.setPosition(1540, 100);
+	Text text("", font, 50);
+	Text textClock("", font, 50);
+	Text ClockStop;
+	text.setFillColor(Color::Black);
+	textClock.setFillColor(Color::Black);
+	Clock clock;
+	text.setPosition(1510, 150);
+	textClock.setPosition(1510, 80);
 	Game game;
 	game.setGridLogic(WordStr{});
-	RenderWindow Gallows(VideoMode(1900, 1000), "The Gallows!", Style::Close);
+	RenderWindow Gallows(VideoMode(1920, 1000), "The Gallows!", Style::Close);
 	Texture gallowsTexture;
 	gallowsTexture.loadFromFile("GallowsTexture.png");
 	Sprite gallowsSprite(gallowsTexture);
@@ -46,11 +51,11 @@ int main()
 				Gallows.close();
 			if (event.type == Event::MouseButtonPressed)
 				if (event.key.code == Mouse::Left) {
-					int x{ (pos.x - 810) / game.getWidthLetter() };
+					int x{ (pos.x - 790) / game.getWidthLetter() };
 					int y{ (pos.y - 270) / game.getHeightLetter() };
 					if (!game.getWIN() && !game.getDefeat()) {
-						if (pos.x > 900 && pos.x < 1440 && pos.y > 360 && pos.y < 900) {
-							if (pos.x > 1170 && pos.y > 810) continue;
+						if (pos.x > 880 && pos.x < 1420 && pos.y > 360 && pos.y < 900) {
+							if (pos.x > 1150 && pos.y > 810) continue;
 							bool flag{ false };
 							for (int k{ 1 }; k < game.getSize(); k++) {
 								if (game.getAlphabet(y, x) == game.getGridLogic(k)) {
@@ -63,34 +68,50 @@ int main()
 									game.setAlphabet(y, x, 34);
 									game.setWidthGallows(800);
 									game.setDefeat();
-									game.setCountLetters()++;
+									game.setCountLetters()--;
 								}
 							} else game.setAlphabet(y, x, 68);
 							
 						}
 					}
 					else {
-						if (pos.x > 1030 && pos.x < 1330 && pos.y > 670 && pos.y < 730) {
+						if (pos.x > 1010 && pos.x < 1310 && pos.y > 670 && pos.y < 730) {
 							game.resetGame();
 							
 						
 						}
-						if (pos.x > 1030 && pos.x < 1330 && pos.y > 745 && pos.y < 805) {
+						if (pos.x > 1010 && pos.x < 1310 && pos.y > 745 && pos.y < 805) {
 							Gallows.close();
 						}
 					
 					}
 				}
 		}
-		//Gallows.clear(Color::White);
+		Gallows.clear(Color::White);
 		gallowsSprite.setTextureRect(IntRect(game.getWidthGallows(), 0, 800, 1000));
 		gallowsSprite.setPosition(0, 0);
 		Gallows.draw(gallowsSprite);
 		frameSprite.setPosition(800, 0);
 		Gallows.draw(frameSprite);
+		std::ostringstream countLetters;
+		std::ostringstream countClock;
+		countLetters << game.getCountLetters();
+		int time{ static_cast<int>(clock.getElapsedTime().asSeconds()) };
+		countClock << time;
+		text.setString(L"Попытки:" + countLetters.str());
+		textClock.setString(L"Время:" + countClock.str());
+		Gallows.draw(text);
+		if (!game.getWIN() && !game.getDefeat()) {
+			ClockStop = textClock;
+			Gallows.draw(textClock);
+		}
+		else {
+			Gallows.draw(ClockStop);
+			clock.restart();
+		}
 		if (!game.getWIN()&&!game.getDefeat()) {
 			for (int i{ 360 }, h{ 1 }; h < 7; i += game.getHeightLetter(), h++) {
-				for (int j{ 900 }, w{ 1 }; w < 7; j += game.getWidthLetter(), w++) {
+				for (int j{ 880 }, w{ 1 }; w < 7; j += game.getWidthLetter(), w++) {
 					if (i == 810 && w > 3) continue;
 					lSprite.setTextureRect(IntRect(game.getAlphabet(h,w) * game.getWidthLetter(), 0, 
 													game.getWidthLetter(), game.getHeightLetter()));
@@ -100,26 +121,26 @@ int main()
 			}
 			
 		}
-		for (int i{ game.getSize() > 6 ? 900 : 950 }, j{ 1 }; j < game.getSize(); i += game.getWidthLetter(), j++) {
+		for (int i{ game.getSize() > 6 ? 870 : 920 }, j{ 1 }; j < game.getSize(); i += game.getWidthLetter(), j++) {
 			lSprite.setTextureRect(IntRect(game.getGridView(j) * game.getWidthLetter(), 0,
 				game.getWidthLetter(), game.getHeightLetter()));
 			lSprite.setPosition(i, 150);
 			Gallows.draw(lSprite);
 		}
 		if (game.getWIN()) {
-			winSprite.setPosition(900, 250);
+			winSprite.setPosition(880, 250);
 			Gallows.draw(winSprite);
-			menuSprite.setPosition(970, 640);
+			menuSprite.setPosition(950, 640);
 			Gallows.draw(menuSprite);
 		}
 		if (game.getDefeat()) {
-			loseSprite.setPosition(900, 250);
+			loseSprite.setPosition(880, 250);
 			Gallows.draw(loseSprite);
-			menuSprite.setPosition(970, 640);
+			menuSprite.setPosition(950, 640);
 			Gallows.draw(menuSprite);
 		
 		}
-		Gallows.draw(text);
+		
 		Gallows.display();
 
 	}
